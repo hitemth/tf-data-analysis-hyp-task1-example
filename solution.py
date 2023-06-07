@@ -11,8 +11,7 @@ def solution(x_success: int,
              y_success: int, 
              y_cnt: int) -> bool:
     from statsmodels.stats.proportion import proportions_ztest
-    p_value = proportions_ztest([x_success, y_success], [x_cnt, y_cnt])[1] / 2
-    if (p_value < 0.05) and (x_success/x_cnt < y_success/y_cnt):
-        return True
-    else:
-        return False
+    count = np.array([x_success, y_success])
+    nobs = np.array([x_cnt, y_cnt])
+    p_val = proportions_ztest(count, nobs, alternative='larger')[1]
+    return p_val <= 0.05
