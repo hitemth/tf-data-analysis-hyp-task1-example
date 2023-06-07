@@ -10,9 +10,9 @@ def solution(x_success: int,
              x_cnt: int, 
              y_success: int, 
              y_cnt: int) -> bool:
-    control_conversion = x_success / x_cnt
-    test_conversion = y_success / y_cnt
-    se = math.sqrt(control_conversion * (1 - control_conversion) / x_cnt + test_conversion * (1 - test_conversion) / y_cnt)
-    z = (test_conversion - control_conversion) / se
-    p_value = norm.sf(abs(z))
-    return p_value <0.05 
+    from statsmodels.stats.proportion import proportions_ztest
+    p_value = proportions_ztest([x_success, y_success], [x_cnt, y_cnt])[1] / 2
+    if (p_value < 0.05) and (x_success/x_cnt < y_success/y_cnt):
+        return True
+    else:
+        return False
